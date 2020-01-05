@@ -2856,6 +2856,15 @@
 				"category": "GitLens"
 			},
 			{
+				"command": "gitlens.openPullRequestOnRemote",
+				"title": "Open Associated Pull Request",
+				"category": "GitLens",
+				"icon": {
+					"dark": "images/dark/icon-pull-request.svg",
+					"light": "images/light/icon-pull-request.svg"
+				}
+			},
+			{
 				"command": "gitlens.openFileInRemote",
 				"title": "Open File on Remote",
 				"category": "GitLens",
@@ -4461,6 +4470,10 @@
 				},
 				{
 					"command": "gitlens.openCommitInRemote",
+					"when": "gitlens:activeFileStatus =~ /blameable/ && gitlens:activeFileStatus =~ /remotes/"
+				},
+				{
+					"command": "gitlens.openPullRequestOnRemote",
 					"when": "gitlens:activeFileStatus =~ /blameable/ && gitlens:activeFileStatus =~ /remotes/"
 				},
 				{
@@ -6502,6 +6515,11 @@
 					"group": "inline@98"
 				},
 				{
+					"command": "gitlens.openPullRequestOnRemote",
+					"when": "viewItem =~ /gitlens:commit\\b(?=.*?\\b\\+pr\\b)/",
+					"group": "inline@98"
+				},
+				{
 					"command": "gitlens.openCommitInRemote",
 					"when": "viewItem =~ /gitlens:commit\\b/ && gitlens:hasRemotes",
 					"group": "inline@99",
@@ -6573,9 +6591,14 @@
 					"group": "2_gitlens_quickopen_1@2"
 				},
 				{
+					"command": "gitlens.openPullRequestOnRemote",
+					"when": "viewItem =~ /gitlens:commit\\b(?=.*?\\b\\+pr\\b)/",
+					"group": "2_gitlens_quickopen_2@1"
+				},
+				{
 					"command": "gitlens.openCommitInRemote",
 					"when": "viewItem =~ /gitlens:commit\\b/ && gitlens:hasRemotes",
-					"group": "2_gitlens_quickopen_2@1",
+					"group": "2_gitlens_quickopen_2@2",
 					"alt": "gitlens.copyRemoteCommitUrl"
 				},
 				{
@@ -6652,6 +6675,11 @@
 					"group": "inline@98"
 				},
 				{
+					"command": "gitlens.openPullRequestOnRemote",
+					"when": "viewItem =~ /gitlens:file\\b(?=.*?\\b\\+pr\\b)/",
+					"group": "inline@98"
+				},
+				{
 					"command": "gitlens.openFileInRemote",
 					"when": "viewItem =~ /gitlens:(file\\b(?!.*?\\b\\+(un)?staged\\b)|history:(file|line))\\b/ && gitlens:hasRemotes",
 					"group": "inline@99",
@@ -6709,9 +6737,14 @@
 					"group": "2_gitlens_quickopen_2@2"
 				},
 				{
+					"command": "gitlens.openPullRequestOnRemote",
+					"when": "viewItem =~ /gitlens:file\\b(?=.*?\\b\\+pr\\b)/",
+					"group": "2_gitlens_quickopen_2@3"
+				},
+				{
 					"command": "gitlens.openCommitInRemote",
 					"when": "viewItem =~ /gitlens:file\\b(?=.*?\\b\\+committed\\b)/ && gitlens:hasRemotes",
-					"group": "2_gitlens_quickopen_2@3",
+					"group": "2_gitlens_quickopen_2@4",
 					"alt": "gitlens.copyRemoteCommitUrl"
 				},
 				{

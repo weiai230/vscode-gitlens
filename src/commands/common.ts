@@ -70,6 +70,7 @@ export enum Commands {
 	OpenFileAtRevision = 'gitlens.openFileRevision',
 	OpenFileAtRevisionFrom = 'gitlens.openFileRevisionFrom',
 	OpenInRemote = 'gitlens.openInRemote',
+	OpenPullRequestOnRemote = 'gitlens.openPullRequestOnRemote',
 	OpenRepoInRemote = 'gitlens.openRepoInRemote',
 	OpenRevisionFile = 'gitlens.openRevisionFile',
 	OpenRevisionFileInDiffLeft = 'gitlens.openRevisionFileInDiffLeft',
