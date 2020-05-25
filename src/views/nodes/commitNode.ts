@@ -15,9 +15,10 @@ import {
 	GitRevisionReference,
 	IssueOrPullRequest,
 	PullRequest,
+	RemoteProvider,
 } from '../../git/git';
 import { StashesView } from '../stashesView';
-import { Arrays, Strings } from '../../system';
+import { Arrays, Promises, Strings } from '../../system';
 import { ViewsWithFiles } from '../viewBase';
 import { ContextValues, ViewNode, ViewRefNode } from './viewNode';
 
@@ -54,7 +55,7 @@ export class CommitNode extends ViewRefNode<ViewsWithFiles, GitRevisionReference
 				  })}\${\n\n${GlyphChars.Dash.repeat(2)}\nfootnotes}`,
 			this.commit,
 			{
-				autolinkedIssues: this._details?.autolinkedIssues,
+				autolinkedIssuesOrPullRequests: this._details?.autolinkedIssuesOrPullRequests,
 				dateFormat: Container.config.defaultDateFormat,
 				getBranchAndTagTips: this.getBranchAndTagTips,
 				messageAutolinks: true,
@@ -105,7 +106,7 @@ export class CommitNode extends ViewRefNode<ViewsWithFiles, GitRevisionReference
 		item.contextValue = `${ContextValues.Commit}${this.branch?.current ? '+current' : ''}${
 			this._details == null
 				? '+details'
-				: `${this._details?.autolinkedIssues != null ? '+autolinks' : ''}${
+				: `${this._details?.autolinkedIssuesOrPullRequests != null ? '+autolinks' : ''}${
 						this._details?.pr != null ? '+pr' : ''
 				  }`
 		}`;
@@ -142,9 +143,11 @@ export class CommitNode extends ViewRefNode<ViewsWithFiles, GitRevisionReference
 
 	private _details:
 		| {
-				autolinkedIssues: Map<string, IssueOrPullRequest | Promises.CancellationError | undefined> | undefined;
+				autolinkedIssuesOrPullRequests:
+					| Map<string, IssueOrPullRequest | Promises.CancellationError | undefined>
+					| undefined;
 				pr: PullRequest | undefined;
-				remotes: GitRemote[];
+				remotes: GitRemote<RemoteProvider>[];
 		  }
 		| undefined = undefined;
 
@@ -155,13 +158,13 @@ export class CommitNode extends ViewRefNode<ViewsWithFiles, GitRevisionReference
 		const remote = await Container.git.getRemoteWithApiProvider(remotes);
 		if (remote?.provider == null) return;
 
-		const [autolinkedIssues, pr] = await Promise.all([
+		const [autolinkedIssuesOrPullRequests, pr] = await Promise.all([
 			Container.autolinks.getIssueOrPullRequestLinks(this.commit.message, remote),
 			Container.git.getPullRequestForCommit(this.commit.ref, remote.provider),
 		]);
 
 		this._details = {
-			autolinkedIssues: autolinkedIssues,
+			autolinkedIssuesOrPullRequests: autolinkedIssuesOrPullRequests,
 			pr: pr,
 			remotes: remotes,
 		};

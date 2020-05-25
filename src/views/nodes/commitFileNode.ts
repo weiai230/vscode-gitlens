@@ -12,6 +12,7 @@ import {
 	GitRevisionReference,
 	IssueOrPullRequest,
 	PullRequest,
+	RemoteProvider,
 	StatusFileFormatter,
 } from '../../git/git';
 import { GitUri } from '../../git/gitUri';
@@ -96,7 +97,7 @@ export class CommitFileNode extends ViewRefFileNode {
 			return `${ContextValues.File}+committed${this._options.inFileHistory ? '+history' : ''}${
 				this._details == null
 					? '+details'
-					: `${this._details?.autolinkedIssues != null ? '+autolinks' : ''}${
+					: `${this._details?.autolinkedIssuesOrPullRequests != null ? '+autolinks' : ''}${
 							this._details?.pr != null ? '+pr' : ''
 					  }`
 			}`;
@@ -164,7 +165,7 @@ export class CommitFileNode extends ViewRefFileNode {
 					  })}\${\n\n${GlyphChars.Dash.repeat(2)}\nfootnotes}`,
 				this.commit,
 				{
-					autolinkedIssues: this._details?.autolinkedIssues,
+					autolinkedIssuesOrPullRequests: this._details?.autolinkedIssuesOrPullRequests,
 					dateFormat: Container.config.defaultDateFormat,
 					messageAutolinks: true,
 					messageIndent: 4,
@@ -223,9 +224,11 @@ export class CommitFileNode extends ViewRefFileNode {
 
 	private _details:
 		| {
-				autolinkedIssues: Map<string, IssueOrPullRequest | Promises.CancellationError | undefined> | undefined;
+				autolinkedIssuesOrPullRequests:
+					| Map<string, IssueOrPullRequest | Promises.CancellationError | undefined>
+					| undefined;
 				pr: PullRequest | undefined;
-				remotes: GitRemote[];
+				remotes: GitRemote<RemoteProvider>[];
 		  }
 		| undefined = undefined;
 
@@ -236,13 +239,13 @@ export class CommitFileNode extends ViewRefFileNode {
 		const remote = await Container.git.getRemoteWithApiProvider(remotes);
 		if (remote?.provider == null) return;
 
-		const [autolinkedIssues, pr] = await Promise.all([
+		const [autolinkedIssuesOrPullRequests, pr] = await Promise.all([
 			Container.autolinks.getIssueOrPullRequestLinks(this.commit.message, remote),
 			Container.git.getPullRequestForCommit(this.commit.ref, remote.provider),
 		]);
 
 		this._details = {
-			autolinkedIssues: autolinkedIssues,
+			autolinkedIssuesOrPullRequests: autolinkedIssuesOrPullRequests,
 			pr: pr,
 			remotes: remotes,
 		};
