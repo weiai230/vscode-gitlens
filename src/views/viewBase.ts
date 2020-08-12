@@ -10,6 +10,7 @@ import {
 	MessageItem,
 	TreeDataProvider,
 	TreeItem,
+	TreeItem2,
 	TreeItemCollapsibleState,
 	TreeView,
 	TreeViewExpansionEvent,
@@ -121,16 +122,16 @@ export abstract class ViewBase<
 			this.getTreeItem = async function (this: ViewBase<RootNode, ViewConfig>, node: ViewNode) {
 				const item = await fn.apply(this, [node]);
 
-				const parent = node.getParent();
-				if (parent != null) {
-					item.tooltip = `${
-						item.tooltip ?? item.label
-					}\n\nDBG:\nnode: ${node.toString()}\nparent: ${parent.toString()}\ncontext: ${item.contextValue}`;
-				} else {
-					item.tooltip = `${item.tooltip ?? item.label}\n\nDBG:\nnode: ${node.toString()}\ncontext: ${
-						item.contextValue
-					}`;
-				}
+				// const parent = node.getParent();
+				// if (parent != null) {
+				// 	item.tooltip = `${
+				// 		item.tooltip ?? item.label
+				// 	}\n\nDBG:\nnode: ${node.toString()}\nparent: ${parent.toString()}\ncontext: ${item.contextValue}`;
+				// } else {
+				// 	item.tooltip = `${item.tooltip ?? item.label}\n\nDBG:\nnode: ${node.toString()}\ncontext: ${
+				// 		item.contextValue
+				// 	}`;
+				// }
 				return item;
 			};
 		}
@@ -258,6 +259,10 @@ export abstract class ViewBase<
 
 	getTreeItem(node: ViewNode): TreeItem | Promise<TreeItem> {
 		return node.getTreeItem();
+	}
+
+	resolveTreeItem(node: ViewNode, item: TreeItem2): TreeItem2 | Promise<TreeItem2> {
+		return node.resolveTreeItem(item);
 	}
 
 	protected onElementCollapsed(e: TreeViewExpansionEvent<ViewNode>) {

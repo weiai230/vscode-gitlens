@@ -1,6 +1,6 @@
 'use strict';
 import * as paths from 'path';
-import { Command, Selection, TreeItem, TreeItemCollapsibleState } from 'vscode';
+import { Command, MarkdownString, Selection, TreeItem, TreeItem2, TreeItemCollapsibleState } from 'vscode';
 import { Commands, DiffWithPreviousCommandArgs } from '../../commands';
 import { GlyphChars } from '../../constants';
 import { Container } from '../../container';
@@ -72,7 +72,7 @@ export class CommitFileNode extends ViewRefFileNode {
 		const item = new TreeItem(this.label, TreeItemCollapsibleState.None);
 		item.contextValue = this.contextValue;
 		item.description = this.description;
-		item.tooltip = this.tooltip;
+		// item.tooltip = this.tooltip;
 
 		if (this._options.displayAsCommit && !(this.view instanceof StashesView) && this.view.config.avatars) {
 			item.iconPath = this.commit.getAvatarUri(Container.config.defaultGravatarsStyle);
@@ -104,6 +104,19 @@ export class CommitFileNode extends ViewRefFileNode {
 		}
 
 		return this.commit.isUncommittedStaged ? `${ContextValues.File}+staged` : `${ContextValues.File}+unstaged`;
+	}
+
+	async resolveTreeItem(item: TreeItem2): Promise<TreeItem2> {
+		if (item.tooltip == null) {
+			await this.loadDetails();
+
+			const markdown = new MarkdownString(this.tooltip, true);
+			markdown.isTrusted = true;
+
+			item.tooltip = markdown;
+			item.contextValue = this.contextValue;
+		}
+		return item;
 	}
 
 	private get description() {
@@ -171,6 +184,7 @@ export class CommitFileNode extends ViewRefFileNode {
 					messageIndent: 4,
 					pullRequestOrRemote: this._details?.pr,
 					remotes: this._details?.remotes,
+					markdown: true,
 				},
 			);
 		}
@@ -250,6 +264,6 @@ export class CommitFileNode extends ViewRefFileNode {
 			remotes: remotes,
 		};
 
-		void this.triggerChange();
+		// void this.triggerChange();
 	}
 }
