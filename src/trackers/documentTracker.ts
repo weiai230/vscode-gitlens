@@ -380,6 +380,7 @@ class EmptyTextDocument implements TextDocument {
 	readonly lineCount: number;
 	readonly uri: Uri;
 	readonly version: number;
+	readonly notebook: undefined;
 
 	constructor(public readonly gitUri: GitUri) {
 		this.uri = gitUri.documentUri({ useVersionedPath: true });

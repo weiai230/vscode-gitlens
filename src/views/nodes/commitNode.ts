@@ -17,7 +17,7 @@ import {
 	RemoteProvider,
 } from '../../git/git';
 import { StashesView } from '../stashesView';
-import { Arrays, Promises, Strings } from '../../system';
+import { Arrays, debug, gate, Promises, Strings } from '../../system';
 import { ViewsWithFiles } from '../viewBase';
 import { ContextValues, ViewNode, ViewRefNode } from './viewNode';
 
@@ -194,5 +194,11 @@ export class CommitNode extends ViewRefNode<ViewsWithFiles, GitRevisionReference
 		// Add pr action to open the pr
 
 		// void this.triggerChange();
+	}
+
+	@gate()
+	@debug()
+	refresh(_reset?: boolean) {
+		this._details = undefined;
 	}
 }

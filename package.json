@@ -18,8 +18,9 @@
 		"url": "https://github.com/eamodio/vscode-gitlens.git"
 	},
 	"engines": {
-		"vscode": "^1.49.0"
+		"vscode": "^1.50.0"
 	},
+	"enableProposedApi": true,
 	"main": "./dist/gitlens",
 	"icon": "images/gitlens-icon.png",
 	"preview": false,
