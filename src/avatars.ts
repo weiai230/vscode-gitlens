@@ -58,7 +58,7 @@ const presenceCache = new Map<ContactPresenceStatus, string>();
 const gitHubNoReplyAddressRegex = /^(?:(?<userId>\d+)\+)?(?<userName>[a-zA-Z\d-]{1,39})@users\.noreply\.github\.com$/;
 
 const retryDecay = [
-	MillisecondsPerDay * 7, // First item is cache expiration (since retries will be 0)
+	MillisecondsPerDay * 7, // First item is cache expiration (since retries will be 0)1
 	MillisecondsPerMinute,
 	MillisecondsPerMinute * 5,
 	MillisecondsPerMinute * 10,
